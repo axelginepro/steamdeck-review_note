@@ -1,0 +1,9 @@
+{
+  "name": "decky-steam-reviews",
+  "author": "TonPseudo",
+  "flags": [],
+  "publish": {
+    "tags": ["reviews", "steam", "library"],
+    "description": "Displays the Steam Review score on game detail pages."
+  }
+}
