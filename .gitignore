@@ -1,0 +1,33 @@
+
+# JetBrains IDE (PyCharm/IntelliJ)
+.idea/
+*.iml
+*.ipr
+*.iws
+ 
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+env/
+ 
+# OS
+.DS_Store
+Thumbs.db
+ 
+# Logs
+*.log
+ 
+# Environment / secrets
+.env
+.env.local
+ 
+# Misc
+*.tmp
+*.bak
