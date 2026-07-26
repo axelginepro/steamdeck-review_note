@@ -209,6 +209,78 @@ const SettingsPanel = () => {
 
 const useParams = Object.values(DFL.ReactRouter).find((val) => /return (\w)\?\1\.params:{}/.test(`${val}`));
 
+// ─── Global "game launching" tracker ──────────────────────────────────────────
+// Registered ONCE at plugin mount (not per badge-instance) so it survives the
+// badge component being torn down/rebuilt frequently by route re-renders,
+// which was causing per-component registration to miss the real event.
+// actionName === 'LaunchApp' on GameActionStart is confirmed against the
+// HLTB for Deck plugin's compiled bundle — BUT GameActionStart/End actually
+// spans the whole play session, not just the loading screen: GameActionEnd
+// only fires when the game is closed, so relying on it alone leaves the card
+// hidden for the entire play session instead of just the brief launch
+// transition. RegisterForAppLifetimeNotifications gives a reliable
+// "is this app actually running now" signal (update.bRunning / update.unAppID),
+// so we use it to clear the launching state as soon as the game has actually
+// started, rather than waiting for the game to be closed.
+let _launchingAppid = null;
+let _launchingSafetyTimer = null;
+const _launchListeners = new Set();
+const _notifyLaunchListeners = () => { _launchListeners.forEach((fn) => { try { fn(); } catch (_err) { /* ignore */ } }); };
+const _clearLaunching = () => {
+    if (_launchingSafetyTimer) { clearTimeout(_launchingSafetyTimer); _launchingSafetyTimer = null; }
+    _launchingAppid = null;
+    _notifyLaunchListeners();
+};
+
+const registerGameActionTracking = () => {
+    console.log('[steam-reviews] registerGameActionTracking() called at plugin mount.');
+    let onStart, onEnd, onLifetime;
+    try {
+        onStart = window.SteamClient?.Apps?.RegisterForGameActionStart?.((_actionType, strAppId, actionName) => {
+            if (actionName !== 'LaunchApp') return;
+            _launchingAppid = parseInt(strAppId, 10);
+            console.log(`[steam-reviews] (global) GameActionStart LaunchApp for ${_launchingAppid}`);
+            _notifyLaunchListeners();
+            // Safety net in case neither GameActionEnd nor the lifetime
+            // notification arrives — a real launch transition is a few
+            // seconds, so 8s is plenty without risking staying hidden.
+            if (_launchingSafetyTimer) clearTimeout(_launchingSafetyTimer);
+            _launchingSafetyTimer = setTimeout(() => {
+                console.log('[steam-reviews] (global) launching safety timeout — clearing state.');
+                _clearLaunching();
+            }, 8000);
+        });
+        onEnd = window.SteamClient?.Apps?.RegisterForGameActionEnd?.(() => {
+            console.log('[steam-reviews] (global) GameActionEnd — clearing launching state');
+            _clearLaunching();
+        });
+        onLifetime = window.SteamClient?.GameSessions?.RegisterForAppLifetimeNotifications?.((update) => {
+            if (update?.bRunning && update?.unAppID === _launchingAppid) {
+                console.log(`[steam-reviews] (global) app ${update.unAppID} confirmed running — clearing launching state`);
+                _clearLaunching();
+            }
+        });
+    } catch (err) {
+        console.warn('[steam-reviews] RegisterForGameActionStart/End/Lifetime unavailable:', err);
+    }
+    return () => {
+        try { onStart?.unregister?.(); } catch (_err) { /* ignore */ }
+        try { onEnd?.unregister?.(); } catch (_err) { /* ignore */ }
+        try { onLifetime?.unregister?.(); } catch (_err) { /* ignore */ }
+        if (_launchingSafetyTimer) { clearTimeout(_launchingSafetyTimer); _launchingSafetyTimer = null; }
+    };
+};
+
+const useIsGameLaunching = (appid) => {
+    const [, forceRender] = SP_REACT.useReducer((c) => c + 1, 0);
+    SP_REACT.useEffect(() => {
+        const listener = () => forceRender();
+        _launchListeners.add(listener);
+        return () => { _launchListeners.delete(listener); };
+    }, []);
+    return appid != null && _launchingAppid === appid;
+};
+
 const useGameOverview = () => {
     const { appid } = useParams();
     const [overview, setOverview] = SP_REACT.useState();
@@ -481,8 +553,10 @@ const SteamReviewsBadge = () => {
     );
 
     const title = overview?.display_name || '';
+    const isLaunching = useIsGameLaunching(Number.isNaN(numericAppid) ? undefined : numericAppid);
 
     if (!numericAppid) return SP_REACT.createElement(SP_REACT.Fragment, null);
+    if (isLaunching) return SP_REACT.createElement(SP_REACT.Fragment, null);
 
     const renderScores = () => {
         if (loading) return SP_REACT.createElement("div", { className: "criticdeck-scores" },
@@ -569,12 +643,14 @@ function patchLibraryApp() {
 
 var index = DFL.definePlugin(() => {
     const libraryPatch = patchLibraryApp();
+    const unregisterGameActionTracking = registerGameActionTracking();
     return {
         title: SP_REACT.createElement("div", { className: DFL.staticClasses.Title }, "Steam Reviews"),
         icon: SP_REACT.createElement(FaStar, null),
         content: SP_REACT.createElement(SettingsPanel, null),
         onDismount() {
             routerHook.removePatch('/library/app/:appid', libraryPatch);
+            unregisterGameActionTracking();
         }
     };
 });
