@@ -25,94 +25,94 @@ const routerHook = api.routerHook;
 const fetchNoCors = api.fetchNoCors;
 
 var DefaultContext = {
-  color: undefined,
-  size: undefined,
-  className: undefined,
-  style: undefined,
-  attr: undefined
+    color: undefined,
+    size: undefined,
+    className: undefined,
+    style: undefined,
+    attr: undefined
 };
 var IconContext = SP_REACT.createContext && SP_REACT.createContext(DefaultContext);
 
 var __assign = window && window.__assign || function () {
-  __assign = Object.assign || function (t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-      s = arguments[i];
-      for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
-    }
-    return t;
-  };
-  return __assign.apply(this, arguments);
+    __assign = Object.assign || function (t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
 };
 var __rest = window && window.__rest || function (s, e) {
-  var t = {};
-  for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
-  if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-    if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
-  }
-  return t;
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function") for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+        if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
+    }
+    return t;
 };
 function Tree2Element(tree) {
-  return tree && tree.map(function (node, i) {
-    return SP_REACT.createElement(node.tag, __assign({
-      key: i
-    }, node.attr), Tree2Element(node.child));
-  });
+    return tree && tree.map(function (node, i) {
+        return SP_REACT.createElement(node.tag, __assign({
+            key: i
+        }, node.attr), Tree2Element(node.child));
+    });
 }
 function GenIcon(data) {
-  // eslint-disable-next-line react/display-name
-  return function (props) {
-    return SP_REACT.createElement(IconBase, __assign({
-      attr: __assign({}, data.attr)
-    }, props), Tree2Element(data.child));
-  };
+    // eslint-disable-next-line react/display-name
+    return function (props) {
+        return SP_REACT.createElement(IconBase, __assign({
+            attr: __assign({}, data.attr)
+        }, props), Tree2Element(data.child));
+    };
 }
 function IconBase(props) {
-  var elem = function (conf) {
-    var attr = props.attr,
-      size = props.size,
-      title = props.title,
-      svgProps = __rest(props, ["attr", "size", "title"]);
-    var computedSize = size || conf.size || "1em";
-    var className;
-    if (conf.className) className = conf.className;
-    if (props.className) className = (className ? className + " " : "") + props.className;
-    return SP_REACT.createElement("svg", __assign({
-      stroke: "currentColor",
-      fill: "currentColor",
-      strokeWidth: "0"
-    }, conf.attr, attr, svgProps, {
-      className: className,
-      style: __assign(__assign({
-        color: props.color || conf.color
-      }, conf.style), props.style),
-      height: computedSize,
-      width: computedSize,
-      xmlns: "http://www.w3.org/2000/svg"
-    }), title && SP_REACT.createElement("title", null, title), props.children);
-  };
-  return IconContext !== undefined ? SP_REACT.createElement(IconContext.Consumer, null, function (conf) {
-    return elem(conf);
-  }) : elem(DefaultContext);
+    var elem = function (conf) {
+        var attr = props.attr,
+            size = props.size,
+            title = props.title,
+            svgProps = __rest(props, ["attr", "size", "title"]);
+        var computedSize = size || conf.size || "1em";
+        var className;
+        if (conf.className) className = conf.className;
+        if (props.className) className = (className ? className + " " : "") + props.className;
+        return SP_REACT.createElement("svg", __assign({
+            stroke: "currentColor",
+            fill: "currentColor",
+            strokeWidth: "0"
+        }, conf.attr, attr, svgProps, {
+            className: className,
+            style: __assign(__assign({
+                color: props.color || conf.color
+            }, conf.style), props.style),
+            height: computedSize,
+            width: computedSize,
+            xmlns: "http://www.w3.org/2000/svg"
+        }), title && SP_REACT.createElement("title", null, title), props.children);
+    };
+    return IconContext !== undefined ? SP_REACT.createElement(IconContext.Consumer, null, function (conf) {
+        return elem(conf);
+    }) : elem(DefaultContext);
 }
 
 // THIS FILE IS AUTO GENERATED
 function FaExternalLinkAlt (props) {
-  return GenIcon({"attr":{"viewBox":"0 0 512 512"},"child":[{"tag":"path","attr":{"d":"M432,320H400a16,16,0,0,0-16,16V448H64V128H208a16,16,0,0,0,16-16V80a16,16,0,0,0-16-16H48A48,48,0,0,0,0,112V464a48,48,0,0,0,48,48H400a48,48,0,0,0,48-48V336A16,16,0,0,0,432,320ZM488,0h-128c-21.37,0-32.05,25.91-17,41l35.73,35.73L135,320.37a24,24,0,0,0,0,34L157.67,377a24,24,0,0,0,34,0L435.28,133.32,471,169c15,15,41,4.5,41-17V24A24,24,0,0,0,488,0Z"}}]})(props);
+    return GenIcon({"attr":{"viewBox":"0 0 512 512"},"child":[{"tag":"path","attr":{"d":"M432,320H400a16,16,0,0,0-16,16V448H64V128H208a16,16,0,0,0,16-16V80a16,16,0,0,0-16-16H48A48,48,0,0,0,0,112V464a48,48,0,0,0,48,48H400a48,48,0,0,0,48-48V336A16,16,0,0,0,432,320ZM488,0h-128c-21.37,0-32.05,25.91-17,41l35.73,35.73L135,320.37a24,24,0,0,0,0,34L157.67,377a24,24,0,0,0,34,0L435.28,133.32,471,169c15,15,41,4.5,41-17V24A24,24,0,0,0,488,0Z"}}]})(props);
 }
 function FaStar (props) {
-  return GenIcon({"attr":{"viewBox":"0 0 576 512"},"child":[{"tag":"path","attr":{"d":"M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z"}}]})(props);
+    return GenIcon({"attr":{"viewBox":"0 0 576 512"},"child":[{"tag":"path","attr":{"d":"M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z"}}]})(props);
 }
 
 
 function SteamLogo(props) {
     return SP_REACT.createElement("svg", {
-        xmlns: "http://www.w3.org/2000/svg",
-        viewBox: "0 0 24 24",
-        width: props.size || 22,
-        height: props.size || 22,
-        fill: "currentColor",
-        style: props.style || {}
-    },
+            xmlns: "http://www.w3.org/2000/svg",
+            viewBox: "0 0 24 24",
+            width: props.size || 22,
+            height: props.size || 22,
+            fill: "currentColor",
+            style: props.style || {}
+        },
         SP_REACT.createElement("path", { d: "M11.979 0C5.678 0 .511 4.86.022 11.037l6.432 2.658c.545-.371 1.203-.59 1.912-.59.063 0 .125.004.188.006l2.861-4.142V8.91c0-2.495 2.028-4.524 4.524-4.524 2.494 0 4.524 2.031 4.524 4.527s-2.03 4.525-4.524 4.525h-.105l-4.076 2.911c0 .052.004.105.004.159 0 1.875-1.515 3.396-3.39 3.396-1.635 0-3.016-1.173-3.331-2.727L.436 15.27C1.862 20.307 6.486 24 11.979 24c6.627 0 11.999-5.373 11.999-12S18.605 0 11.979 0zM7.54 18.21l-1.473-.61c.262.543.714.999 1.314 1.25 1.297.539 2.793-.076 3.332-1.375.263-.63.264-1.319.005-1.949s-.75-1.121-1.377-1.383c-.624-.26-1.29-.249-1.878-.03l1.523.63c.956.4 1.409 1.497 1.009 2.455-.397.957-1.497 1.41-2.454 1.012H7.54zm11.415-9.303c0-1.662-1.353-3.015-3.015-3.015-1.665 0-3.015 1.353-3.015 3.015 0 1.665 1.35 3.015 3.015 3.015 1.663 0 3.015-1.35 3.015-3.015zm-5.273.005c0-1.252 1.013-2.266 2.265-2.266 1.249 0 2.266 1.014 2.266 2.266 0 1.251-1.017 2.265-2.266 2.265-1.252 0-2.265-1.014-2.265-2.265z" })
     );
 }
@@ -211,17 +211,18 @@ const useParams = Object.values(DFL.ReactRouter).find((val) => /return (\w)\?\1\
 
 // ─── Global "game launching" tracker ──────────────────────────────────────────
 // Registered ONCE at plugin mount (not per badge-instance) so it survives the
-// badge component being torn down/rebuilt frequently by route re-renders,
-// which was causing per-component registration to miss the real event.
-// actionName === 'LaunchApp' on GameActionStart is confirmed against the
-// HLTB for Deck plugin's compiled bundle — BUT GameActionStart/End actually
-// spans the whole play session, not just the loading screen: GameActionEnd
-// only fires when the game is closed, so relying on it alone leaves the card
-// hidden for the entire play session instead of just the brief launch
-// transition. RegisterForAppLifetimeNotifications gives a reliable
-// "is this app actually running now" signal (update.bRunning / update.unAppID),
-// so we use it to clear the launching state as soon as the game has actually
-// started, rather than waiting for the game to be closed.
+// badge component being torn down/rebuilt frequently by route re-renders.
+//
+// Only GameActionStart is used to set the hidden state.
+// GameActionEnd and RegisterForAppLifetimeNotifications are intentionally
+// NOT used to clear it: GameActionEnd can fire too early (before the game
+// actually appears on screen), and onLifetime fires as soon as bRunning=true
+// (a few seconds after launch), both of which caused the badge to reappear
+// almost immediately.
+//
+// Instead, the badge stays hidden for exactly 5 minutes (300 000 ms) via the
+// safety timer — long enough to ensure the game is fully loaded and the user
+// won't see the badge pop back in during the transition.
 let _launchingAppid = null;
 let _launchingSafetyTimer = null;
 const _launchListeners = new Set();
@@ -234,39 +235,26 @@ const _clearLaunching = () => {
 
 const registerGameActionTracking = () => {
     console.log('[steam-reviews] registerGameActionTracking() called at plugin mount.');
-    let onStart, onEnd, onLifetime;
+    let onStart;
     try {
         onStart = window.SteamClient?.Apps?.RegisterForGameActionStart?.((_actionType, strAppId, actionName) => {
             if (actionName !== 'LaunchApp') return;
             _launchingAppid = parseInt(strAppId, 10);
             console.log(`[steam-reviews] (global) GameActionStart LaunchApp for ${_launchingAppid}`);
             _notifyLaunchListeners();
-            // Safety net in case neither GameActionEnd nor the lifetime
-            // notification arrives — a real launch transition is a few
-            // seconds, so 8s is plenty without risking staying hidden.
+            // Badge stays hidden for 5 minutes after launch.
+            // No other event clears this — only the timer.
             if (_launchingSafetyTimer) clearTimeout(_launchingSafetyTimer);
             _launchingSafetyTimer = setTimeout(() => {
-                console.log('[steam-reviews] (global) launching safety timeout — clearing state.');
+                console.log('[steam-reviews] (global) 5-min launch timer elapsed — clearing state.');
                 _clearLaunching();
-            }, 8000);
-        });
-        onEnd = window.SteamClient?.Apps?.RegisterForGameActionEnd?.(() => {
-            console.log('[steam-reviews] (global) GameActionEnd — clearing launching state');
-            _clearLaunching();
-        });
-        onLifetime = window.SteamClient?.GameSessions?.RegisterForAppLifetimeNotifications?.((update) => {
-            if (update?.bRunning && update?.unAppID === _launchingAppid) {
-                console.log(`[steam-reviews] (global) app ${update.unAppID} confirmed running — clearing launching state`);
-                _clearLaunching();
-            }
+            }, 300000);
         });
     } catch (err) {
-        console.warn('[steam-reviews] RegisterForGameActionStart/End/Lifetime unavailable:', err);
+        console.warn('[steam-reviews] RegisterForGameActionStart unavailable:', err);
     }
     return () => {
         try { onStart?.unregister?.(); } catch (_err) { /* ignore */ }
-        try { onEnd?.unregister?.(); } catch (_err) { /* ignore */ }
-        try { onLifetime?.unregister?.(); } catch (_err) { /* ignore */ }
         if (_launchingSafetyTimer) { clearTimeout(_launchingSafetyTimer); _launchingSafetyTimer = null; }
     };
 };
@@ -561,11 +549,11 @@ const SteamReviewsBadge = () => {
     const renderScores = () => {
         if (loading) return SP_REACT.createElement("div", { className: "criticdeck-scores" },
             SP_REACT.createElement("div", { className: "criticdeck-score-row" },
-                SP_REACT.createElement("span", { className: "criticdeck-row-label" }, "Loading\u2026")));
+                SP_REACT.createElement("span", { className: "criticdeck-row-label" }, "Loading…")));
 
         if (error) return SP_REACT.createElement("div", { className: "criticdeck-scores" },
             SP_REACT.createElement("div", { className: "criticdeck-score-row" },
-                SP_REACT.createElement("span", { className: "criticdeck-row-label" }, "\u26a0\ufe0f " + error)));
+                SP_REACT.createElement("span", { className: "criticdeck-row-label" }, "⚠️ " + error)));
 
         if (!data?.found) return null;
 
@@ -589,14 +577,14 @@ const SteamReviewsBadge = () => {
     const renderBody = () => null;
 
     return (SP_REACT.createElement("div", {
-        id: "steam-reviews-badge-container",
-        className: "criticdeck-badge-root",
-        "data-position": position,
-        style: {
-            '--criticdeck-offset-x': `${horizontalOffset || 0}px`,
-            '--criticdeck-offset-y': `${verticalOffset || 0}px`
-        }
-    },
+            id: "steam-reviews-badge-container",
+            className: "criticdeck-badge-root",
+            "data-position": position,
+            style: {
+                '--criticdeck-offset-x': `${horizontalOffset || 0}px`,
+                '--criticdeck-offset-y': `${verticalOffset || 0}px`
+            }
+        },
         steamReviewsStyle,
         SP_REACT.createElement("div", { className: "criticdeck-card" },
             SP_REACT.createElement("div", { className: "criticdeck-card-inner" },
