@@ -433,41 +433,41 @@ const formatPct = (pct: number): string => pct.toFixed(2).replace(/\.?0+$/, "");
 
 const steamReviewsStyle = (
   <style>{`
-    .criticdeck-badge-root {
+    .steamrev-badge-root {
       position: absolute;
       z-index: 2;
-      --criticdeck-offset-x: 24px;
-      --criticdeck-offset-y: 56px;
+      --steamrev-offset-x: 24px;
+      --steamrev-offset-y: 56px;
     }
 
-    .criticdeck-badge-root[data-position='top-right'] {
-      top: var(--criticdeck-offset-y);
-      right: var(--criticdeck-offset-x);
+    .steamrev-badge-root[data-position='top-right'] {
+      top: var(--steamrev-offset-y);
+      right: var(--steamrev-offset-x);
     }
-    .criticdeck-badge-root[data-position='bottom-right'] {
-      bottom: var(--criticdeck-offset-y);
-      right: var(--criticdeck-offset-x);
+    .steamrev-badge-root[data-position='bottom-right'] {
+      bottom: var(--steamrev-offset-y);
+      right: var(--steamrev-offset-x);
     }
-    .criticdeck-badge-root[data-position='top-left'] {
-      top: var(--criticdeck-offset-y);
-      left: var(--criticdeck-offset-x);
+    .steamrev-badge-root[data-position='top-left'] {
+      top: var(--steamrev-offset-y);
+      left: var(--steamrev-offset-x);
     }
-    .criticdeck-badge-root[data-position='bottom-left'] {
-      bottom: var(--criticdeck-offset-y);
-      left: var(--criticdeck-offset-x);
+    .steamrev-badge-root[data-position='bottom-left'] {
+      bottom: var(--steamrev-offset-y);
+      left: var(--steamrev-offset-x);
     }
-    .criticdeck-badge-root[data-position='top-center'] {
-      top: var(--criticdeck-offset-y);
+    .steamrev-badge-root[data-position='top-center'] {
+      top: var(--steamrev-offset-y);
       left: 50%;
       transform: translateX(-50%);
     }
-    .criticdeck-badge-root[data-position='bottom-center'] {
-      bottom: var(--criticdeck-offset-y);
+    .steamrev-badge-root[data-position='bottom-center'] {
+      bottom: var(--steamrev-offset-y);
       left: 50%;
       transform: translateX(-50%);
     }
 
-    .criticdeck-card {
+    .steamrev-card {
       min-width: 255px;
       width: fit-content;
       max-width: min(420px, 92vw);
@@ -484,7 +484,7 @@ const steamReviewsStyle = (
       backdrop-filter: blur(6px);
     }
 
-    .criticdeck-scores {
+    .steamrev-scores {
       display: grid;
       grid-template-columns: max-content 1fr;
       column-gap: 6px;
@@ -492,11 +492,11 @@ const steamReviewsStyle = (
       align-items: baseline;
     }
 
-    .criticdeck-score-row {
+    .steamrev-score-row {
       display: contents;
     }
 
-    .criticdeck-row-label {
+    .steamrev-row-label {
       font-size: 9px;
       font-weight: 700;
       letter-spacing: 0.06em;
@@ -506,49 +506,49 @@ const steamReviewsStyle = (
       flex-shrink: 0;
     }
 
-    .criticdeck-row-value {
+    .steamrev-row-value {
       font-size: 12px;
       font-weight: 600;
       color: #fff;
       overflow-wrap: anywhere;
     }
 
-    .criticdeck-row-value[data-tone='great'] { color: #66bb6a; }
-    .criticdeck-row-value[data-tone='good']  { color: #ffb74d; }
-    .criticdeck-row-value[data-tone='weak']  { color: #ef5350; }
+    .steamrev-row-value[data-tone='great'] { color: #66bb6a; }
+    .steamrev-row-value[data-tone='good']  { color: #ffb74d; }
+    .steamrev-row-value[data-tone='weak']  { color: #ef5350; }
 
-    .criticdeck-row-count {
+    .steamrev-row-count {
       font-size: 11px;
       color: rgba(255,255,255,0.45);
     }
 
-    .criticdeck-divider {
+    .steamrev-divider {
       grid-column: 1 / -1;
       border: none;
       border-top: 1px solid rgba(255,255,255,0.08);
       margin: 2px 0;
     }
 
-    .criticdeck-score-chip { display: none; }
+    .steamrev-score-chip { display: none; }
 
-    .criticdeck-card-inner {
+    .steamrev-card-inner {
       display: flex;
       flex-direction: row;
       align-items: center;
       gap: 8px;
     }
 
-    .criticdeck-steam-icon {
+    .steamrev-steam-icon {
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
       color: rgba(255,255,255,0.65);
     }
-    .criticdeck-body { display: none; }
-    .criticdeck-title { display: none; }
-    .criticdeck-status { display: none; }
-    .criticdeck-actions { display: none; }
+    .steamrev-body { display: none; }
+    .steamrev-title { display: none; }
+    .steamrev-status { display: none; }
+    .steamrev-actions { display: none; }
   `}</style>
 );
 
@@ -596,18 +596,18 @@ const SteamReviewsBadge = () => {
   const renderScores = () => {
     if (loading)
       return (
-        <div className="criticdeck-scores">
-          <div className="criticdeck-score-row">
-            <span className="criticdeck-row-label">Loading…</span>
+        <div className="steamrev-scores">
+          <div className="steamrev-score-row">
+            <span className="steamrev-row-label">Loading…</span>
           </div>
         </div>
       );
 
     if (error)
       return (
-        <div className="criticdeck-scores">
-          <div className="criticdeck-score-row">
-            <span className="criticdeck-row-label">⚠️ {error}</span>
+        <div className="steamrev-scores">
+          <div className="steamrev-score-row">
+            <span className="steamrev-row-label">⚠️ {error}</span>
           </div>
         </div>
       );
@@ -618,30 +618,30 @@ const SteamReviewsBadge = () => {
     const recentCount = data.recent_reviews_total?.toLocaleString();
 
     return (
-      <div className="criticdeck-scores">
+      <div className="steamrev-scores">
         {data.recent_reviews_label && recentCount ? (
           <>
-            <div className="criticdeck-score-row">
-              <span className="criticdeck-row-label">RECENT REVIEWS:</span>
-              <span className="criticdeck-row-value" data-tone={recentTone}>
+            <div className="steamrev-score-row">
+              <span className="steamrev-row-label">RECENT REVIEWS:</span>
+              <span className="steamrev-row-value" data-tone={recentTone}>
                 {data.recent_reviews_label} ({recentCount})
               </span>
             </div>
-            <hr className="criticdeck-divider" />
+            <hr className="steamrev-divider" />
           </>
         ) : null}
-        <div className="criticdeck-score-row">
-          <span className="criticdeck-row-label">ALL REVIEWS:</span>
-          <span className="criticdeck-row-value" data-tone={allTone}>
+        <div className="steamrev-score-row">
+          <span className="steamrev-row-label">ALL REVIEWS:</span>
+          <span className="steamrev-row-value" data-tone={allTone}>
             {data.all_reviews_label} ({allCount})
           </span>
         </div>
         {data.all_reviews_score_pct != null ? (
           <>
-            <hr className="criticdeck-divider" />
-            <div className="criticdeck-score-row">
-              <span className="criticdeck-row-label">GLOBAL SCORE:</span>
-              <span className="criticdeck-row-value" data-tone={allTone}>
+            <hr className="steamrev-divider" />
+            <div className="steamrev-score-row">
+              <span className="steamrev-row-label">GLOBAL SCORE:</span>
+              <span className="steamrev-row-value" data-tone={allTone}>
                 {formatPct(data.all_reviews_score_pct)}% ({allCount})
               </span>
             </div>
@@ -654,19 +654,19 @@ const SteamReviewsBadge = () => {
   return (
     <div
       id="steam-reviews-badge-container"
-      className="criticdeck-badge-root"
+      className="steamrev-badge-root"
       data-position={position}
       style={
         {
-          "--criticdeck-offset-x": `${horizontalOffset || 0}px`,
-          "--criticdeck-offset-y": `${verticalOffset || 0}px`,
+          "--steamrev-offset-x": `${horizontalOffset || 0}px`,
+          "--steamrev-offset-y": `${verticalOffset || 0}px`,
         } as React.CSSProperties
       }
     >
       {steamReviewsStyle}
-      <div className="criticdeck-card">
-        <div className="criticdeck-card-inner">
-          <div className="criticdeck-steam-icon">
+      <div className="steamrev-card">
+        <div className="steamrev-card-inner">
+          <div className="steamrev-steam-icon">
             <SteamLogo size={20} style={{ opacity: 0.7 }} />
           </div>
           <div style={{ flex: 1 }}>{renderScores()}</div>

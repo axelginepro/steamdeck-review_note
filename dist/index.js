@@ -440,41 +440,41 @@ const toneForPct = (pct) => {
 const formatPct = (pct) => pct.toFixed(2).replace(/\.?0+$/, "");
 // ─── CSS ──────────────────────────────────────────────────────────────────────
 const steamReviewsStyle = (SP_REACT.createElement("style", null, `
-    .criticdeck-badge-root {
+    .steamrev-badge-root {
       position: absolute;
       z-index: 2;
-      --criticdeck-offset-x: 24px;
-      --criticdeck-offset-y: 56px;
+      --steamrev-offset-x: 24px;
+      --steamrev-offset-y: 56px;
     }
 
-    .criticdeck-badge-root[data-position='top-right'] {
-      top: var(--criticdeck-offset-y);
-      right: var(--criticdeck-offset-x);
+    .steamrev-badge-root[data-position='top-right'] {
+      top: var(--steamrev-offset-y);
+      right: var(--steamrev-offset-x);
     }
-    .criticdeck-badge-root[data-position='bottom-right'] {
-      bottom: var(--criticdeck-offset-y);
-      right: var(--criticdeck-offset-x);
+    .steamrev-badge-root[data-position='bottom-right'] {
+      bottom: var(--steamrev-offset-y);
+      right: var(--steamrev-offset-x);
     }
-    .criticdeck-badge-root[data-position='top-left'] {
-      top: var(--criticdeck-offset-y);
-      left: var(--criticdeck-offset-x);
+    .steamrev-badge-root[data-position='top-left'] {
+      top: var(--steamrev-offset-y);
+      left: var(--steamrev-offset-x);
     }
-    .criticdeck-badge-root[data-position='bottom-left'] {
-      bottom: var(--criticdeck-offset-y);
-      left: var(--criticdeck-offset-x);
+    .steamrev-badge-root[data-position='bottom-left'] {
+      bottom: var(--steamrev-offset-y);
+      left: var(--steamrev-offset-x);
     }
-    .criticdeck-badge-root[data-position='top-center'] {
-      top: var(--criticdeck-offset-y);
+    .steamrev-badge-root[data-position='top-center'] {
+      top: var(--steamrev-offset-y);
       left: 50%;
       transform: translateX(-50%);
     }
-    .criticdeck-badge-root[data-position='bottom-center'] {
-      bottom: var(--criticdeck-offset-y);
+    .steamrev-badge-root[data-position='bottom-center'] {
+      bottom: var(--steamrev-offset-y);
       left: 50%;
       transform: translateX(-50%);
     }
 
-    .criticdeck-card {
+    .steamrev-card {
       min-width: 255px;
       width: fit-content;
       max-width: min(420px, 92vw);
@@ -491,7 +491,7 @@ const steamReviewsStyle = (SP_REACT.createElement("style", null, `
       backdrop-filter: blur(6px);
     }
 
-    .criticdeck-scores {
+    .steamrev-scores {
       display: grid;
       grid-template-columns: max-content 1fr;
       column-gap: 6px;
@@ -499,11 +499,11 @@ const steamReviewsStyle = (SP_REACT.createElement("style", null, `
       align-items: baseline;
     }
 
-    .criticdeck-score-row {
+    .steamrev-score-row {
       display: contents;
     }
 
-    .criticdeck-row-label {
+    .steamrev-row-label {
       font-size: 9px;
       font-weight: 700;
       letter-spacing: 0.06em;
@@ -513,49 +513,49 @@ const steamReviewsStyle = (SP_REACT.createElement("style", null, `
       flex-shrink: 0;
     }
 
-    .criticdeck-row-value {
+    .steamrev-row-value {
       font-size: 12px;
       font-weight: 600;
       color: #fff;
       overflow-wrap: anywhere;
     }
 
-    .criticdeck-row-value[data-tone='great'] { color: #66bb6a; }
-    .criticdeck-row-value[data-tone='good']  { color: #ffb74d; }
-    .criticdeck-row-value[data-tone='weak']  { color: #ef5350; }
+    .steamrev-row-value[data-tone='great'] { color: #66bb6a; }
+    .steamrev-row-value[data-tone='good']  { color: #ffb74d; }
+    .steamrev-row-value[data-tone='weak']  { color: #ef5350; }
 
-    .criticdeck-row-count {
+    .steamrev-row-count {
       font-size: 11px;
       color: rgba(255,255,255,0.45);
     }
 
-    .criticdeck-divider {
+    .steamrev-divider {
       grid-column: 1 / -1;
       border: none;
       border-top: 1px solid rgba(255,255,255,0.08);
       margin: 2px 0;
     }
 
-    .criticdeck-score-chip { display: none; }
+    .steamrev-score-chip { display: none; }
 
-    .criticdeck-card-inner {
+    .steamrev-card-inner {
       display: flex;
       flex-direction: row;
       align-items: center;
       gap: 8px;
     }
 
-    .criticdeck-steam-icon {
+    .steamrev-steam-icon {
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
       color: rgba(255,255,255,0.65);
     }
-    .criticdeck-body { display: none; }
-    .criticdeck-title { display: none; }
-    .criticdeck-status { display: none; }
-    .criticdeck-actions { display: none; }
+    .steamrev-body { display: none; }
+    .steamrev-title { display: none; }
+    .steamrev-status { display: none; }
+    .steamrev-actions { display: none; }
   `));
 // ─── Badge Component ──────────────────────────────────────────────────────────
 function SteamLogo(props) {
@@ -578,54 +578,54 @@ const SteamReviewsBadge = () => {
         return SP_REACT.createElement(SP_REACT.Fragment, null);
     const renderScores = () => {
         if (loading)
-            return (SP_REACT.createElement("div", { className: "criticdeck-scores" },
-                SP_REACT.createElement("div", { className: "criticdeck-score-row" },
-                    SP_REACT.createElement("span", { className: "criticdeck-row-label" }, "Loading\u2026"))));
+            return (SP_REACT.createElement("div", { className: "steamrev-scores" },
+                SP_REACT.createElement("div", { className: "steamrev-score-row" },
+                    SP_REACT.createElement("span", { className: "steamrev-row-label" }, "Loading\u2026"))));
         if (error)
-            return (SP_REACT.createElement("div", { className: "criticdeck-scores" },
-                SP_REACT.createElement("div", { className: "criticdeck-score-row" },
-                    SP_REACT.createElement("span", { className: "criticdeck-row-label" },
+            return (SP_REACT.createElement("div", { className: "steamrev-scores" },
+                SP_REACT.createElement("div", { className: "steamrev-score-row" },
+                    SP_REACT.createElement("span", { className: "steamrev-row-label" },
                         "\u26A0\uFE0F ",
                         error))));
         if (!data?.found)
             return null;
         const allCount = data.all_reviews_total?.toLocaleString() ?? "0";
         const recentCount = data.recent_reviews_total?.toLocaleString();
-        return (SP_REACT.createElement("div", { className: "criticdeck-scores" },
+        return (SP_REACT.createElement("div", { className: "steamrev-scores" },
             data.recent_reviews_label && recentCount ? (SP_REACT.createElement(SP_REACT.Fragment, null,
-                SP_REACT.createElement("div", { className: "criticdeck-score-row" },
-                    SP_REACT.createElement("span", { className: "criticdeck-row-label" }, "RECENT REVIEWS:"),
-                    SP_REACT.createElement("span", { className: "criticdeck-row-value", "data-tone": recentTone },
+                SP_REACT.createElement("div", { className: "steamrev-score-row" },
+                    SP_REACT.createElement("span", { className: "steamrev-row-label" }, "RECENT REVIEWS:"),
+                    SP_REACT.createElement("span", { className: "steamrev-row-value", "data-tone": recentTone },
                         data.recent_reviews_label,
                         " (",
                         recentCount,
                         ")")),
-                SP_REACT.createElement("hr", { className: "criticdeck-divider" }))) : null,
-            SP_REACT.createElement("div", { className: "criticdeck-score-row" },
-                SP_REACT.createElement("span", { className: "criticdeck-row-label" }, "ALL REVIEWS:"),
-                SP_REACT.createElement("span", { className: "criticdeck-row-value", "data-tone": allTone },
+                SP_REACT.createElement("hr", { className: "steamrev-divider" }))) : null,
+            SP_REACT.createElement("div", { className: "steamrev-score-row" },
+                SP_REACT.createElement("span", { className: "steamrev-row-label" }, "ALL REVIEWS:"),
+                SP_REACT.createElement("span", { className: "steamrev-row-value", "data-tone": allTone },
                     data.all_reviews_label,
                     " (",
                     allCount,
                     ")")),
             data.all_reviews_score_pct != null ? (SP_REACT.createElement(SP_REACT.Fragment, null,
-                SP_REACT.createElement("hr", { className: "criticdeck-divider" }),
-                SP_REACT.createElement("div", { className: "criticdeck-score-row" },
-                    SP_REACT.createElement("span", { className: "criticdeck-row-label" }, "GLOBAL SCORE:"),
-                    SP_REACT.createElement("span", { className: "criticdeck-row-value", "data-tone": allTone },
+                SP_REACT.createElement("hr", { className: "steamrev-divider" }),
+                SP_REACT.createElement("div", { className: "steamrev-score-row" },
+                    SP_REACT.createElement("span", { className: "steamrev-row-label" }, "GLOBAL SCORE:"),
+                    SP_REACT.createElement("span", { className: "steamrev-row-value", "data-tone": allTone },
                         formatPct(data.all_reviews_score_pct),
                         "% (",
                         allCount,
                         ")")))) : null));
     };
-    return (SP_REACT.createElement("div", { id: "steam-reviews-badge-container", className: "criticdeck-badge-root", "data-position": position, style: {
-            "--criticdeck-offset-x": `${horizontalOffset || 0}px`,
-            "--criticdeck-offset-y": `${verticalOffset || 0}px`,
+    return (SP_REACT.createElement("div", { id: "steam-reviews-badge-container", className: "steamrev-badge-root", "data-position": position, style: {
+            "--steamrev-offset-x": `${horizontalOffset || 0}px`,
+            "--steamrev-offset-y": `${verticalOffset || 0}px`,
         } },
         steamReviewsStyle,
-        SP_REACT.createElement("div", { className: "criticdeck-card" },
-            SP_REACT.createElement("div", { className: "criticdeck-card-inner" },
-                SP_REACT.createElement("div", { className: "criticdeck-steam-icon" },
+        SP_REACT.createElement("div", { className: "steamrev-card" },
+            SP_REACT.createElement("div", { className: "steamrev-card-inner" },
+                SP_REACT.createElement("div", { className: "steamrev-steam-icon" },
                     SP_REACT.createElement(SteamLogo, { size: 20, style: { opacity: 0.7 } })),
                 SP_REACT.createElement("div", { style: { flex: 1 } }, renderScores())))));
 };
