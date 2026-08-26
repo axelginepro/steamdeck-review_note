@@ -31,7 +31,6 @@ jobs:
           mkdir -p build
           zip -r build/SteamOS_plugin_steam_review_${{ github.ref_name }}.zip \
             dist \
-            images \
             main.py \
             package.json \
             plugin.json \
