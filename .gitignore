@@ -1,10 +1,13 @@
 
+# Node
+node_modules/
+
 # JetBrains IDE (PyCharm/IntelliJ)
 .idea/
 *.iml
 *.ipr
 *.iws
- 
+
 # Python
 __pycache__/
 *.py[cod]
