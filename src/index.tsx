@@ -241,10 +241,13 @@ interface SteamReviewsResult {
   all_reviews_total?: number;
   all_reviews_negative?: number;
   all_reviews_score_pct?: number | null;
+  recent_reviews_label?: string;
+  recent_reviews_total?: number;
+  recent_reviews_score_pct?: number | null;
   store_url?: string;
 }
 
-const CACHE_KEY = "steam-reviews.cache.v4";
+const CACHE_KEY = "steam-reviews.cache.v5";
 const CACHE_TTL_MS = 6 * 60 * 60 * 1000; // 6 hours
 const FETCH_TIMEOUT_MS = 15000; // 15 seconds — avoid the badge hanging on "Loading…" forever
 
@@ -275,6 +278,50 @@ const setCached = (key: string, payload: SteamReviewsResult) => {
   }
 };
 
+// Steam's public appreviews JSON endpoint only ever returns all-time totals in
+// query_summary — the filter/day_range params only affect which individual
+// reviews are listed, not the aggregate score. The 30-day "recent" score is
+// only available server-rendered on the store page itself, so we scrape that
+// one block out of the HTML instead. Bypass the mature-content age gate via
+// cookies (a long-standing, stable Steam trick) so the block is present for
+// every app, not just non-mature ones.
+const RECENT_REVIEWS_RE =
+  /data-tooltip-html="(\d+)% of the ([\d,]+) user reviews in the last 30 days are positive\."[\s\S]*?<span class="game_review_summary [a-z_]+">([^<]+)<\/span>/;
+
+const parseRecentReviews = (
+  html: string
+): Pick<SteamReviewsResult, "recent_reviews_label" | "recent_reviews_total" | "recent_reviews_score_pct"> | undefined => {
+  const match = html.match(RECENT_REVIEWS_RE);
+  if (!match) return undefined;
+  return {
+    recent_reviews_score_pct: parseInt(match[1], 10),
+    recent_reviews_total: parseInt(match[2].replace(/,/g, ""), 10),
+    recent_reviews_label: match[3].trim(),
+  };
+};
+
+const queryRecentReviews = async (appid: number) => {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+  try {
+    const resp = await fetchNoCors(`https://store.steampowered.com/app/${appid}/`, {
+      method: "GET",
+      headers: {
+        Accept: "text/html",
+        Cookie: "birthtime=0; lastagecheckage=1-January-1990; wants_mature_content=1",
+      },
+      signal: controller.signal,
+    } as RequestInit);
+    if (!resp.ok) return undefined;
+    const html = await resp.text();
+    return parseRecentReviews(html);
+  } catch (_err) {
+    return undefined;
+  } finally {
+    clearTimeout(timer);
+  }
+};
+
 const querySteamReviews = async (appid: number): Promise<SteamReviewsResult> => {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
@@ -299,6 +346,9 @@ const querySteamReviews = async (appid: number): Promise<SteamReviewsResult> => 
       totalReviews > 0 ? Math.round((totalPositive / totalReviews) * 10000) / 100 : null;
     const allLabel = qs.review_score_desc || "No Reviews";
 
+    // Best-effort — a scrape failure shouldn't take down the all-time score.
+    const recent = await queryRecentReviews(appid);
+
     return {
       found: true,
       appid,
@@ -307,6 +357,7 @@ const querySteamReviews = async (appid: number): Promise<SteamReviewsResult> => 
       all_reviews_total: totalReviews,
       all_reviews_negative: totalNegative,
       all_reviews_score_pct: scorePct,
+      ...recent,
       store_url: `https://store.steampowered.com/app/${appid}/#app_reviews_hash`,
     };
   } catch (err) {
@@ -375,6 +426,9 @@ const toneForPct = (pct: number | null | undefined): Tone => {
   return "weak";
 };
 
+// Drops trailing zeros — 92 stays "92", 74.09 stays "74.09".
+const formatPct = (pct: number): string => pct.toFixed(2).replace(/\.?0+$/, "");
+
 // ─── CSS ──────────────────────────────────────────────────────────────────────
 
 const steamReviewsStyle = (
@@ -416,6 +470,7 @@ const steamReviewsStyle = (
     .criticdeck-card {
       min-width: 255px;
       width: fit-content;
+      max-width: min(420px, 92vw);
       background: rgba(10, 10, 10, 0.88);
       border: 1px solid rgba(255,255,255,0.10);
       border-radius: 10px;
@@ -430,16 +485,15 @@ const steamReviewsStyle = (
     }
 
     .criticdeck-scores {
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
+      display: grid;
+      grid-template-columns: max-content 1fr;
+      column-gap: 6px;
+      row-gap: 3px;
+      align-items: baseline;
     }
 
     .criticdeck-score-row {
-      display: flex;
-      align-items: baseline;
-      gap: 5px;
-      white-space: nowrap;
+      display: contents;
     }
 
     .criticdeck-row-label {
@@ -448,6 +502,7 @@ const steamReviewsStyle = (
       letter-spacing: 0.06em;
       color: rgba(255,255,255,0.50);
       text-transform: uppercase;
+      white-space: nowrap;
       flex-shrink: 0;
     }
 
@@ -455,6 +510,7 @@ const steamReviewsStyle = (
       font-size: 12px;
       font-weight: 600;
       color: #fff;
+      overflow-wrap: anywhere;
     }
 
     .criticdeck-row-value[data-tone='great'] { color: #66bb6a; }
@@ -467,6 +523,7 @@ const steamReviewsStyle = (
     }
 
     .criticdeck-divider {
+      grid-column: 1 / -1;
       border: none;
       border-top: 1px solid rgba(255,255,255,0.08);
       margin: 2px 0;
@@ -477,7 +534,7 @@ const steamReviewsStyle = (
     .criticdeck-card-inner {
       display: flex;
       flex-direction: row;
-      align-items: flex-start;
+      align-items: center;
       gap: 8px;
     }
 
@@ -485,7 +542,6 @@ const steamReviewsStyle = (
       display: flex;
       align-items: center;
       justify-content: center;
-      padding-top: 2px;
       flex-shrink: 0;
       color: rgba(255,255,255,0.65);
     }
@@ -525,6 +581,10 @@ const SteamReviewsBadge = () => {
   const { position, horizontalOffset, verticalOffset } = settings;
 
   const allTone = useMemo(() => toneForPct(data?.all_reviews_score_pct), [data?.all_reviews_score_pct]);
+  const recentTone = useMemo(
+    () => toneForPct(data?.recent_reviews_score_pct),
+    [data?.recent_reviews_score_pct]
+  );
 
   const isLaunching = useIsGameLaunching(
     numericAppid == null || Number.isNaN(numericAppid) ? undefined : numericAppid
@@ -555,22 +615,38 @@ const SteamReviewsBadge = () => {
     if (!data?.found) return null;
 
     const allCount = data.all_reviews_total?.toLocaleString() ?? "0";
+    const recentCount = data.recent_reviews_total?.toLocaleString();
 
     return (
       <div className="criticdeck-scores">
+        {data.recent_reviews_label && recentCount ? (
+          <>
+            <div className="criticdeck-score-row">
+              <span className="criticdeck-row-label">RECENT REVIEWS:</span>
+              <span className="criticdeck-row-value" data-tone={recentTone}>
+                {data.recent_reviews_label} ({recentCount})
+              </span>
+            </div>
+            <hr className="criticdeck-divider" />
+          </>
+        ) : null}
         <div className="criticdeck-score-row">
           <span className="criticdeck-row-label">ALL REVIEWS:</span>
           <span className="criticdeck-row-value" data-tone={allTone}>
             {data.all_reviews_label} ({allCount})
           </span>
         </div>
-        <hr className="criticdeck-divider" />
-        <div className="criticdeck-score-row">
-          <span className="criticdeck-row-label">SCORE:</span>
-          <span className="criticdeck-row-value" data-tone={allTone}>
-            {data.all_reviews_score_pct != null ? `${data.all_reviews_score_pct}%` : data.all_reviews_label}
-          </span>
-        </div>
+        {data.all_reviews_score_pct != null ? (
+          <>
+            <hr className="criticdeck-divider" />
+            <div className="criticdeck-score-row">
+              <span className="criticdeck-row-label">GLOBAL SCORE:</span>
+              <span className="criticdeck-row-value" data-tone={allTone}>
+                {formatPct(data.all_reviews_score_pct)}% ({allCount})
+              </span>
+            </div>
+          </>
+        ) : null}
       </div>
     );
   };
